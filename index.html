@@ -1,1138 +1,322 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>NS Marketing LA — Motion-First Redesign (No Images)</title>
-  <meta name="description" content="A motion-heavy, image-free redesign concept for NS Marketing LA. Social links only." />
-  <meta name="theme-color" content="#07070c"/>
-  <style>
-    :root{
-      --bg0:#07070c;
-      --bg1:#0a0d1a;
-      --panel: rgba(255,255,255,.05);
-      --panel2: rgba(255,255,255,.035);
-      --line: rgba(255,255,255,.12);
-      --text:#eef1ff;
-      --muted:#a9b6db;
-      --a:#7c5cff;     /* violet */
-      --b:#2ee9a6;     /* mint */
-      --c:#ffcf5c;     /* gold */
-      --d:#ff6b6b;     /* coral */
-      --shadow: 0 20px 80px rgba(0,0,0,.55);
-      --r: 26px;
-      --r2: 18px;
-      --max: 1180px;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      color:var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      background: radial-gradient(1200px 700px at 12% 10%, rgba(124,92,255,.20), transparent 60%),
-                  radial-gradient(900px 650px at 92% 12%, rgba(46,233,166,.14), transparent 58%),
-                  radial-gradient(900px 650px at 78% 92%, rgba(255,207,92,.10), transparent 58%),
-                  linear-gradient(180deg, var(--bg0), var(--bg1) 40%, var(--bg0));
-      overflow-x:hidden;
-    }
-    a{color:inherit;text-decoration:none}
-    .wrap{width:min(var(--max), calc(100% - 44px)); margin:0 auto}
-    /* ====== Animated backdrop (no images) ====== */
-    .backdrop{
-      position:fixed; inset:0; z-index:0;
-      pointer-events:none;
-    }
-    .gridlines{
-      position:absolute; inset:-40%;
-      background-image:
-        linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
-      background-size: 72px 72px;
-      transform: rotate(-12deg);
-      opacity:.06;
-      animation: drift 18s linear infinite;
-      filter: blur(.2px);
-    }
-    @keyframes drift{
-      from{transform: translate3d(-2%, -2%, 0) rotate(-12deg)}
-      to{transform: translate3d(2%, 2%, 0) rotate(-12deg)}
-    }
-    .noise{
-      position:absolute; inset:0;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
-      mix-blend-mode: overlay;
-      opacity:.10;
-    }
-    .blobs{
-      position:absolute; inset:0;
-      filter: blur(32px);
-      opacity:.65;
-    }
-    .blob{
-      position:absolute;
-      width:520px;height:520px;border-radius: 42% 58% 62% 38% / 40% 44% 56% 60%;
-      background: radial-gradient(circle at 30% 30%, rgba(124,92,255,.65), rgba(124,92,255,0) 55%),
-                  radial-gradient(circle at 70% 60%, rgba(46,233,166,.55), rgba(46,233,166,0) 55%),
-                  radial-gradient(circle at 50% 50%, rgba(255,207,92,.35), rgba(255,207,92,0) 60%);
-      animation: morph 12s ease-in-out infinite, floaty 10s ease-in-out infinite;
-      will-change: transform, border-radius;
-    }
-    .blob.b2{
-      width:640px;height:640px;
-      left:auto; right:-180px; top:6%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,207,92,.40), rgba(255,207,92,0) 55%),
-                  radial-gradient(circle at 70% 60%, rgba(124,92,255,.55), rgba(124,92,255,0) 55%),
-                  radial-gradient(circle at 50% 50%, rgba(46,233,166,.35), rgba(46,233,166,0) 60%);
-      animation-duration: 14s, 12s;
-      opacity:.9;
-    }
-    .blob.b3{
-      width:700px;height:700px;
-      top:auto; bottom:-260px; left:18%;
-      background: radial-gradient(circle at 30% 30%, rgba(46,233,166,.55), rgba(46,233,166,0) 55%),
-                  radial-gradient(circle at 70% 60%, rgba(255,107,107,.35), rgba(255,107,107,0) 55%),
-                  radial-gradient(circle at 50% 50%, rgba(124,92,255,.35), rgba(124,92,255,0) 60%);
-      animation-duration: 16s, 11s;
-      opacity:.8;
-    }
-    @keyframes morph{
-      0%{border-radius: 42% 58% 62% 38% / 40% 44% 56% 60%}
-      33%{border-radius: 56% 44% 38% 62% / 52% 58% 42% 48%}
-      66%{border-radius: 38% 62% 56% 44% / 60% 40% 60% 40%}
-      100%{border-radius: 42% 58% 62% 38% / 40% 44% 56% 60%}
-    }
-    @keyframes floaty{
-      0%,100%{transform: translate3d(-8px, -10px, 0) rotate(-2deg)}
-      50%{transform: translate3d(12px, 16px, 0) rotate(2deg)}
-    }
-
-    /* Particle canvas */
-    #fx{
-      position:absolute; inset:0;
-      width:100%; height:100%;
-      opacity:.75;
-    }
-
-    /* ====== Topbar ====== */
-    header{
-      position:sticky; top:0; z-index:40;
-      backdrop-filter: blur(14px);
-      background: rgba(7,7,12,.55);
-      border-bottom: 1px solid rgba(255,255,255,.10);
-    }
-    .nav{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:16px; padding:14px 0;
-    }
-    .brand{display:flex; align-items:center; gap:12px; min-width:230px}
-    .mark{
-      width:40px;height:40px;border-radius:16px;
-      border:1px solid rgba(255,255,255,.16);
-      background:
-        radial-gradient(circle at 30% 30%, rgba(46,233,166,.95), transparent 55%),
-        radial-gradient(circle at 70% 60%, rgba(124,92,255,.95), transparent 55%),
-        radial-gradient(circle at 60% 90%, rgba(255,207,92,.70), transparent 60%),
-        linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.02));
-      box-shadow: 0 14px 34px rgba(0,0,0,.28);
-    }
-    .brand strong{letter-spacing:.2px}
-    .brand span{display:block;margin-top:2px;color:var(--muted);font-size:12px}
-    nav.links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}
-    nav.links a{
-      color:var(--muted); font-size:14px;
-      padding:8px 10px;border-radius:12px;border:1px solid transparent;
-      transition: background .15s ease, border-color .15s ease, color .15s ease, transform .15s ease;
-    }
-    nav.links a:hover{
-      color:var(--text);
-      border-color: rgba(255,255,255,.14);
-      background: rgba(255,255,255,.04);
-      transform: translateY(-1px);
-    }
-    .ctaRow{display:flex;gap:10px;align-items:center;justify-content:flex-end}
-    .kbd{
-      font-size:12px; color: rgba(233,238,252,.78);
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.04);
-      padding:4px 8px; border-radius:10px;
-      font-weight:800;
-      display:none;
-    }
-
-    /* Buttons */
-    .btn{
-      position:relative;
-      display:inline-flex; align-items:center; justify-content:center;
-      padding:10px 14px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.06);
-      color:var(--text);
-      font-weight:800;
-      box-shadow: 0 12px 30px rgba(0,0,0,.18);
-      transition: transform .15s ease, background .15s ease, border-color .15s ease, filter .15s ease;
-      user-select:none; white-space:nowrap; overflow:hidden;
-    }
-    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.26)}
-    .btn.primary{
-      border-color: rgba(124,92,255,.55);
-      background: linear-gradient(135deg, rgba(124,92,255,.95), rgba(46,233,166,.60));
-    }
-    .btn.primary::after{
-      content:"";
-      position:absolute; inset:-2px;
-      background: radial-gradient(260px 160px at var(--mx,50%) var(--my,50%), rgba(255,255,255,.30), transparent 60%);
-      opacity:0; transition: opacity .2s ease;
-      pointer-events:none;
-    }
-    .btn.primary:hover::after{opacity:.95}
-    .btn.ghost{background:transparent}
-
-    .menuBtn{
-      display:none;
-      width:44px; height:44px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.06);
-      color:var(--text);
-      align-items:center; justify-content:center;
-      cursor:pointer;
-    }
-
-    /* ====== Main / Hero ====== */
-    main{position:relative; z-index:2}
-    .hero{padding:64px 0 18px}
-    .heroGrid{display:grid; grid-template-columns: 1.1fr .9fr; gap:20px; align-items:stretch}
-    .chip{
-      display:inline-flex; align-items:center; gap:10px;
-      padding:9px 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.04);
-      color:var(--muted);
-      font-size:13px;
-      transform-origin:left center;
-      animation: pop .8s ease both;
-    }
-    @keyframes pop{from{opacity:0; transform: translateY(10px) scale(.98)} to{opacity:1; transform: translateY(0) scale(1)}}
-    .dot{
-      width:9px;height:9px;border-radius:50%;
-      background: radial-gradient(circle at 30% 30%, var(--b), var(--a));
-      box-shadow: 0 0 0 7px rgba(124,92,255,.12);
-    }
-    h1{
-      margin:14px 0 12px;
-      font-size: clamp(40px, 4.6vw, 64px);
-      line-height:1.02;
-      letter-spacing:-1px;
-    }
-    .gradientText{
-      background: linear-gradient(90deg, var(--a), var(--b), var(--c));
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-      filter: drop-shadow(0 18px 40px rgba(0,0,0,.40));
-    }
-    .lead{
-      color:var(--muted);
-      font-size:16px;
-      line-height:1.8;
-      max-width:62ch;
-    }
-    .heroActions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
-    .metaRow{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
-    .meta{
-      font-size:13px;color:var(--muted);
-      display:inline-flex; align-items:center; gap:10px;
-      padding:10px 12px;border-radius:14px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.03);
-    }
-    .meta i{
-      width:9px;height:9px;border-radius:50%;
-      background: rgba(46,233,166,.85);
-      box-shadow: 0 0 0 7px rgba(46,233,166,.10);
-      display:inline-block;
-    }
-
-    /* Hero kinetic panel (no images) */
-    .kinetic{
-      border-radius: var(--r);
-      border:1px solid rgba(255,255,255,.14);
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      box-shadow: var(--shadow);
-      position:relative;
-      overflow:hidden;
-      transform-style: preserve-3d;
-    }
-    .kinetic::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(580px 340px at 20% 10%, rgba(124,92,255,.22), transparent 60%),
-        radial-gradient(560px 340px at 75% 35%, rgba(46,233,166,.16), transparent 60%),
-        radial-gradient(620px 420px at 50% 120%, rgba(255,207,92,.12), transparent 60%);
-      pointer-events:none;
-    }
-    .kineticInner{position:relative; padding:16px}
-    .orbWrap{
-      height: 320px;
-      border-radius: 20px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(7,7,12,.30);
-      position:relative;
-      overflow:hidden;
-    }
-    .orb{
-      position:absolute;
-      inset:auto;
-      width:170px;height:170px;border-radius:50%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), rgba(255,255,255,0) 55%),
-                  radial-gradient(circle at 40% 50%, rgba(124,92,255,.85), rgba(124,92,255,0) 60%),
-                  radial-gradient(circle at 60% 60%, rgba(46,233,166,.65), rgba(46,233,166,0) 60%);
-      filter: blur(.2px);
-      animation: orbit 6.5s ease-in-out infinite;
-      mix-blend-mode: screen;
-      opacity:.95;
-    }
-    .orb.o2{
-      width:230px;height:230px;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.30), rgba(255,255,255,0) 55%),
-                  radial-gradient(circle at 40% 50%, rgba(255,207,92,.70), rgba(255,207,92,0) 60%),
-                  radial-gradient(circle at 60% 60%, rgba(124,92,255,.60), rgba(124,92,255,0) 60%);
-      animation-duration: 8.5s;
-      opacity:.85;
-    }
-    .orb.o3{
-      width:140px;height:140px;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.28), rgba(255,255,255,0) 55%),
-                  radial-gradient(circle at 40% 50%, rgba(46,233,166,.80), rgba(46,233,166,0) 60%),
-                  radial-gradient(circle at 60% 60%, rgba(255,107,107,.40), rgba(255,107,107,0) 60%);
-      animation-duration: 7.2s;
-      opacity:.85;
-    }
-    @keyframes orbit{
-      0%{transform: translate3d(18px, 22px, 0) scale(.98)}
-      30%{transform: translate3d(330px, 42px, 0) scale(1.06)}
-      65%{transform: translate3d(210px, 190px, 0) scale(.95)}
-      100%{transform: translate3d(18px, 22px, 0) scale(.98)}
-    }
-    .scanlines{
-      position:absolute; inset:-2px;
-      background: repeating-linear-gradient(
-        to bottom,
-        rgba(255,255,255,.05),
-        rgba(255,255,255,.05) 1px,
-        transparent 1px,
-        transparent 8px
-      );
-      opacity:.08;
-      animation: scan 7s linear infinite;
-      pointer-events:none;
-    }
-    @keyframes scan{
-      from{transform: translateY(0)}
-      to{transform: translateY(60px)}
-    }
-    .kpiRow{
-      display:grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap:12px;
-      margin-top:12px;
-    }
-    .kpi{
-      padding:14px;
-      border-radius: 18px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(7,7,12,.42);
-      position:relative;
-      overflow:hidden;
-    }
-    .kpi::after{
-      content:"";
-      position:absolute; inset:-2px;
-      background: radial-gradient(320px 180px at 20% 10%, rgba(124,92,255,.16), transparent 60%);
-      pointer-events:none;
-    }
-    .kpi > *{position:relative}
-    .kpi strong{display:block; font-size:24px; letter-spacing:-.4px}
-    .kpi span{display:block;margin-top:6px;color:var(--muted);font-size:13px;line-height:1.35}
-
-    /* ====== Sections ====== */
-    section{padding:72px 0}
-    .sectionHead{
-      display:flex; align-items:flex-end; justify-content:space-between;
-      gap:18px; flex-wrap:wrap; margin-bottom:18px;
-    }
-    .sectionHead h2{margin:0; font-size: clamp(22px, 2.8vw, 36px); letter-spacing:-.4px}
-    .sectionHead p{margin:0; color:var(--muted); max-width:72ch; line-height:1.75}
-    .grid3{display:grid; grid-template-columns: repeat(3, 1fr); gap:14px}
-
-    .card{
-      border-radius: var(--r2);
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.03);
-      padding:16px;
-      position:relative;
-      overflow:hidden;
-      min-height:170px;
-      transform-style: preserve-3d;
-    }
-    .card::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(520px 280px at 20% 10%, rgba(124,92,255,.16), transparent 60%),
-        radial-gradient(520px 280px at 90% 70%, rgba(46,233,166,.10), transparent 60%);
-      pointer-events:none;
-      opacity:.9;
-      transition: opacity .25s ease, transform .25s ease;
-    }
-    .card:hover::before{opacity:1; transform: scale(1.02)}
-    .card > *{position:relative}
-    .tag{
-      display:inline-flex;
-      font-size:12px;
-      color:rgba(233,238,252,.95);
-      background: rgba(124,92,255,.12);
-      border:1px solid rgba(124,92,255,.28);
-      padding:6px 10px;
-      border-radius:999px;
-      font-weight:900;
-      letter-spacing:.2px;
-    }
-    .card h3{margin:10px 0 8px; font-size:16px}
-    .card p{margin:0; color:var(--muted); line-height:1.7; font-size:14px}
-    .list{margin:10px 0 0; padding:0; list-style:none; display:flex; flex-wrap:wrap; gap:8px}
-    .pill{
-      font-size:12px; color:var(--muted);
-      padding:6px 10px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.03);
-    }
-
-    /* Wave divider (pure CSS) */
-    .wave{
-      height:1px;
-      background: linear-gradient(90deg, rgba(124,92,255,.0), rgba(124,92,255,.6), rgba(46,233,166,.6), rgba(255,207,92,.5), rgba(124,92,255,.0));
-      position:relative;
-      overflow:visible;
-    }
-    .wave::after{
-      content:"";
-      position:absolute; left:0; right:0; top:-18px;
-      height:36px;
-      background:
-        radial-gradient(18px 18px at 18px 18px, rgba(124,92,255,.28), transparent 60%),
-        radial-gradient(18px 18px at calc(100% - 18px) 18px, rgba(46,233,166,.20), transparent 60%);
-      opacity:.65;
-      filter: blur(1px);
-      animation: shimmer 3.2s ease-in-out infinite;
-    }
-    @keyframes shimmer{0%,100%{transform: translateX(-6px)}50%{transform: translateX(6px)}}
-
-    /* Timeline */
-    .steps{display:grid; grid-template-columns: repeat(4, 1fr); gap:14px}
-    .step{
-      padding:16px;border-radius: var(--r2);
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.03);
-      position:relative;
-      overflow:hidden;
-    }
-    .step::after{
-      content:"";
-      position:absolute; inset:-2px;
-      background: radial-gradient(360px 220px at 20% 10%, rgba(46,233,166,.12), transparent 60%);
-      pointer-events:none;
-    }
-    .step > *{position:relative}
-    .step b{display:block;font-size:12px;color:var(--muted);letter-spacing:.3px;font-weight:900}
-    .step strong{display:block;margin-top:8px;font-size:15px}
-    .step span{display:block;margin-top:8px;color:var(--muted);font-size:13px;line-height:1.7}
-
-    /* Results + motion line */
-    .stats{display:grid; grid-template-columns: repeat(4, 1fr); gap:14px}
-    .stat{
-      padding:16px;border-radius: var(--r2);
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.03);
-      position:relative; overflow:hidden;
-    }
-    .stat::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background: linear-gradient(90deg, rgba(124,92,255,0), rgba(124,92,255,.22), rgba(46,233,166,.18), rgba(255,207,92,.14), rgba(124,92,255,0));
-      opacity:.0;
-      transform: translateX(-35%);
-      pointer-events:none;
-    }
-    .stat.pulse::before{
-      opacity:1;
-      animation: sweep 1.2s ease both;
-    }
-    @keyframes sweep{from{transform: translateX(-35%)}to{transform: translateX(35%)}}
-    .stat strong{display:block;font-size:28px;letter-spacing:-.4px}
-    .stat span{display:block;margin-top:8px;color:var(--muted);font-size:13px;line-height:1.6}
-
-    /* Socials */
-    .socialGrid{display:grid; grid-template-columns: 1fr 1fr; gap:14px}
-    .socialCard{padding:18px;border-radius: var(--r2);border:1px solid rgba(255,255,255,.12);background: rgba(255,255,255,.03)}
-    .socialCard h3{margin:0 0 8px}
-    .socialCard p{margin:0; color:var(--muted); line-height:1.8}
-    .socialBtns{display:flex; flex-wrap:wrap; gap:10px; margin-top:14px}
-
-    /* FAQ */
-    details{border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.03); border-radius: 16px; padding:14px}
-    details + details{margin-top:10px}
-    summary{cursor:pointer; font-weight:900; list-style:none}
-    summary::-webkit-details-marker{display:none}
-    .faqText{margin:10px 0 0; color:var(--muted); line-height:1.8}
-
-    /* Reveal anim */
-    .reveal{opacity:0; transform: translateY(14px); filter: blur(8px); transition: opacity .9s ease, transform .9s ease, filter .9s ease}
-    .reveal.in{opacity:1; transform: translateY(0); filter: blur(0)}
-    .reveal.d1{transition-delay:.08s}
-    .reveal.d2{transition-delay:.16s}
-    .reveal.d3{transition-delay:.24s}
-
-    /* Drawer */
-    .drawer{display:none; position:fixed; inset:0; background: rgba(0,0,0,.60); z-index:80; padding:18px}
-    .drawer.open{display:block}
-    .drawerPanel{width:min(560px, 100%); background: rgba(7,7,12,.90); border:1px solid rgba(255,255,255,.14);
-      border-radius: 22px; padding:14px; box-shadow: var(--shadow); backdrop-filter: blur(14px)}
-    .drawerHeader{display:flex; align-items:center; justify-content:space-between; gap:10px}
-    .drawerLinks{display:grid; gap:8px; margin-top:12px}
-    .drawerLinks a{padding:12px; border-radius: 14px; border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.03); color:var(--text)}
-    .drawerLinks a span{display:block; color:var(--muted); font-size:12px; margin-top:4px}
-
-    /* Cursor trail */
-    .trail{
-      position:fixed; left:0; top:0; width:14px; height:14px;
-      border-radius:50%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.25), rgba(255,255,255,0) 60%),
-                  radial-gradient(circle at 50% 50%, rgba(46,233,166,.65), rgba(46,233,166,0) 62%);
-      mix-blend-mode: screen;
-      pointer-events:none;
-      z-index:90;
-      opacity:.0;
-      filter: blur(.2px);
-      will-change: transform, opacity;
-    }
-    .trail.t2{
-      width:22px;height:22px;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.18), rgba(255,255,255,0) 60%),
-                  radial-gradient(circle at 50% 50%, rgba(124,92,255,.55), rgba(124,92,255,0) 62%);
-      opacity:.0;
-      z-index:89;
-    }
-
-    /* Footer */
-    footer{padding:24px 0 42px; border-top:1px solid rgba(255,255,255,.10); color:var(--muted); font-size:13px}
-    footer .frow{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap}
-    .smallLinks{display:flex; gap:14px; flex-wrap:wrap}
-    .smallLinks a{color:var(--muted)}
-    .smallLinks a:hover{color:var(--text)}
-
-    /* Responsive */
-    @media (max-width: 980px){
-      .heroGrid{grid-template-columns: 1fr}
-      .steps{grid-template-columns: 1fr 1fr}
-      .grid3{grid-template-columns: 1fr}
-      .stats{grid-template-columns: 1fr 1fr}
-      .socialGrid{grid-template-columns: 1fr}
-      nav.links{display:none}
-      .menuBtn{display:inline-flex}
-      .kbd{display:inline-flex}
-    }
-    @media (max-width: 520px){
-      .steps{grid-template-columns: 1fr}
-      .stats{grid-template-columns: 1fr}
-    }
-    @media (prefers-reduced-motion: reduce){
-      .gridlines,.blob,.scanlines{animation:none}
-      .reveal{transition:none}
-      .btn{transition:none}
-      .trail{display:none}
-    }
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#05080d" />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="description" content="Демонстрационный сайт Пегас-Авто: температурная логистика, Control Tower, 3PL, LTL Cold и цифровой контроль перевозок." />
+  <title>Пегас-Авто — холодовая цепь под контролем</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/styles.css" />
 </head>
 <body>
-  <!-- Animated background -->
-  <div class="backdrop" aria-hidden="true">
-    <div class="gridlines"></div>
-    <div class="blobs">
-      <div class="blob" style="left:-180px; top:-170px"></div>
-      <div class="blob b2"></div>
-      <div class="blob b3"></div>
-    </div>
-    <canvas id="fx"></canvas>
-    <div class="noise"></div>
+  <div class="preloader" id="preloader" aria-hidden="true">
+    <div class="preloader__brand"><span>PEGAS</span><i></i><span>AUTO</span></div>
+    <div class="preloader__line"><b></b></div>
+    <div class="preloader__copy">COLD CHAIN / CONTROL TOWER / 24×7</div>
   </div>
 
-  <!-- Cursor trails -->
-  <div class="trail" id="trail1" aria-hidden="true"></div>
-  <div class="trail t2" id="trail2" aria-hidden="true"></div>
+  <div class="scroll-progress" id="scrollProgress"></div>
+  <div class="cursor-glow" id="cursorGlow"></div>
+  <div class="noise" aria-hidden="true"></div>
 
-  <header>
-    <div class="wrap">
-      <div class="nav">
-        <a class="brand" href="#top" aria-label="NS Marketing home">
-          <div class="mark" aria-hidden="true"></div>
-          <div>
-            <strong>NS Marketing</strong>
-            <span>Motion-first studio · Los Angeles</span>
-          </div>
-        </a>
+  <header class="topbar" id="topbar">
+    <a class="brand" href="#hero" aria-label="Пегас-Авто">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M7 40c12-1 21-7 28-20 3 8 9 14 18 17-8 2-14 6-18 14-7-6-16-10-28-11Z" fill="currentColor"/>
+        <path d="M20 28c8-1 15-6 20-13" fill="none" stroke="#051017" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+      <span><b>ПЕГАС-АВТО</b><small>COLD-CHAIN OPERATOR</small></span>
+    </a>
 
-        <nav class="links" aria-label="Primary">
-          <a href="#services">Services</a>
-          <a href="#process">Process</a>
-          <a href="#results">Results</a>
-          <a href="#socials">Socials</a>
-          <a href="#faq">FAQ</a>
-        </nav>
+    <nav class="desktop-nav" aria-label="Основная навигация">
+      <a href="#solutions">Решения</a>
+      <a href="#control">Control Tower</a>
+      <a href="#platform">Платформа</a>
+      <a href="#process">Как работаем</a>
+    </nav>
 
-        <div class="ctaRow">
-          <span class="kbd">Press <b>A</b> for AUDIT</span>
-          <a class="btn ghost magnetic" href="#services">Explore</a>
-          <a class="btn primary magnetic" href="#socials">Message us</a>
-          <button class="menuBtn" id="menuBtn" aria-label="Open menu">☰</button>
-        </div>
-      </div>
+    <div class="topbar__actions">
+      <button class="ghost-button" data-open="trackModal">Отследить рейс</button>
+      <button class="primary-button magnetic" data-open="portalModal">Демо кабинета</button>
+      <button class="menu-button" id="menuButton" aria-label="Открыть меню"><span></span><span></span></button>
     </div>
   </header>
 
-  <main id="top" class="wrap">
-    <section class="hero">
-      <div class="heroGrid">
-        <div class="reveal in">
-          <div class="chip"><span class="dot"></span> No images — only motion, shapes, and micro-interactions</div>
-          <h1>Build a <span class="gradientText" id="swapWord">lead system</span><br/>that scales without chaos.</h1>
-          <p class="lead" id="scramble">
-            We combine Ads, SEO and Conversion into one clear strategy. Weekly iteration, transparent KPIs,
-            and a system that turns attention into revenue.
-          </p>
+  <aside class="mobile-menu" id="mobileMenu">
+    <a href="#solutions">Решения</a>
+    <a href="#control">Control Tower</a>
+    <a href="#platform">Платформа</a>
+    <a href="#process">Как работаем</a>
+    <button class="primary-button" data-open="portalModal">Открыть демо</button>
+  </aside>
 
-          <div class="heroActions">
-            <a class="btn primary magnetic" href="#socials">Get a quick audit in socials</a>
-            <a class="btn magnetic" href="#process">See our process</a>
-          </div>
+  <main>
+    <section class="hero" id="hero">
+      <div class="hero__image" data-parallax="0.14"></div>
+      <div class="hero__overlay"></div>
+      <div class="hero__route" aria-hidden="true">
+        <svg viewBox="0 0 1200 520" preserveAspectRatio="none">
+          <path class="route-shadow" d="M50 430 C250 330 330 460 510 300 S790 180 1150 70" />
+          <path class="route-line" d="M50 430 C250 330 330 460 510 300 S790 180 1150 70" />
+          <circle class="route-dot dot-a" cx="50" cy="430" r="7" />
+          <circle class="route-dot dot-b" cx="510" cy="300" r="7" />
+          <circle class="route-dot dot-c" cx="1150" cy="70" r="7" />
+        </svg>
+      </div>
 
-          <div class="metaRow">
-            <div class="meta"><i></i> First tests: 7–14 days</div>
-            <div class="meta"><i></i> Weekly optimization cadence</div>
-            <div class="meta"><i></i> Focus: CPL · ROAS · Revenue</div>
-          </div>
+      <div class="hero__content container">
+        <div class="hero__eyebrow reveal-up"><i></i> ДЕМОНСТРАЦИОННЫЙ ПРОТОТИП 2026</div>
+        <h1 class="reveal-up">
+          Холодовая цепь.<br />
+          <span>Без слепых зон.</span>
+        </h1>
+        <p class="hero__lead reveal-up">Температурные перевозки, склады, кросс-докинг, 3PL и управление рисками в одном цифровом контуре.</p>
+        <div class="hero__actions reveal-up">
+          <a class="primary-button magnetic" href="#calculator">Рассчитать перевозку</a>
+          <button class="glass-button" data-open="portalModal"><span class="play-icon">▶</span> Посмотреть платформу</button>
+        </div>
+      </div>
+
+      <div class="hero__telemetry glass-panel reveal-right">
+        <div class="telemetry__top"><span><i class="live-dot"></i> LIVE CONTROL</span><b>PA-2041</b></div>
+        <div class="telemetry__route"><strong>Москва</strong><i></i><strong>Самара</strong></div>
+        <div class="telemetry__grid">
+          <div><small>Температура</small><b>+2.4°C</b><em>норма</em></div>
+          <div><small>ETA</small><b>18:40</b><em>в срок</em></div>
+          <div><small>Готовность</small><b>72%</b><em>758 км</em></div>
+        </div>
+        <div class="telemetry__temperature"><span style="height:38%"></span><span style="height:54%"></span><span style="height:46%"></span><span style="height:65%"></span><span style="height:57%"></span><span style="height:72%"></span><span style="height:60%"></span><span style="height:82%"></span><span style="height:74%"></span><span style="height:88%"></span><span style="height:78%"></span><span style="height:92%"></span></div>
+      </div>
+
+      <div class="hero__bottom container">
+        <div class="hero-stat"><b data-count="24">0</b><span>/ 7<br />мониторинг</span></div>
+        <div class="hero-stat"><b data-count="5">0</b><span>контуров<br />в одной системе</span></div>
+        <div class="hero-stat"><b data-count="1">0</b><span>ответственный<br />за каждый риск</span></div>
+        <div class="scroll-hint"><span></span> Листайте вниз</div>
+      </div>
+    </section>
+
+    <section class="manifesto section-dark">
+      <div class="container manifesto__grid">
+        <div class="section-tag reveal-up">НОВАЯ РОЛЬ НА РЫНКЕ</div>
+        <p class="manifesto__text reveal-up">Не просто <span>машина и маршрут.</span><br />Пегас-Авто продаёт сохранность, доказуемость, срок, документы и спокойствие клиента.</p>
+        <div class="manifesto__aside reveal-left">Мы собираем перевозку, температуру, ETA, документы, маржу и реакцию на ЧП в один управляемый процесс.</div>
+      </div>
+    </section>
+
+    <section class="solutions" id="solutions">
+      <div class="container">
+        <div class="section-heading">
+          <div><div class="section-tag reveal-up">ПРОДУКТОВАЯ ЛИНЕЙКА</div><h2 class="reveal-up">Шесть решений.<br /><span>Один стандарт качества.</span></h2></div>
+          <p class="reveal-up">Каждый продукт отвечает не на вопрос какой кузов, а на вопрос какой риск клиента мы берём под контроль.</p>
         </div>
 
-        <div class="kinetic reveal d1 tilt" id="tiltCard">
-          <div class="kineticInner">
-            <div class="orbWrap" aria-label="Animated system panel">
-              <div class="orb"></div>
-              <div class="orb o2"></div>
-              <div class="orb o3"></div>
-              <div class="scanlines"></div>
+        <div class="solutions-grid">
+          <article class="solution-card solution-card--wide tilt-card reveal-up">
+            <img src="https://images.pexels.com/photos/2199293/pexels-photo-2199293.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="Грузовой автомобиль на трассе" loading="lazy" />
+            <div class="solution-card__shade"></div>
+            <div class="solution-card__content"><span>01 / TEMPERATURE</span><h3>Pegas Fresh</h3><p>Премиальная температурная перевозка с паспортом рейса, ETA и контролем отклонений.</p><button data-open="portalModal">Открыть демо →</button></div>
+          </article>
+
+          <article class="solution-card tilt-card reveal-up">
+            <img src="https://images.pexels.com/photos/4481326/pexels-photo-4481326.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Работа в логистическом центре" loading="lazy" />
+            <div class="solution-card__shade"></div>
+            <div class="solution-card__content"><span>02 / MEAT</span><h3>Pegas Meat</h3><p>Тушевозы, санитарный контроль и специализированные процессы для мясной продукции.</p></div>
+          </article>
+
+          <article class="solution-card tilt-card reveal-up">
+            <img src="https://images.pexels.com/photos/4481259/pexels-photo-4481259.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Складская логистика" loading="lazy" />
+            <div class="solution-card__shade"></div>
+            <div class="solution-card__content"><span>03 / RETAIL</span><h3>Pegas Retail</h3><p>Окна РЦ, SLA, документы и предсказуемые поставки в федеральные сети.</p></div>
+          </article>
+
+          <article class="solution-card tilt-card reveal-up">
+            <img src="https://images.pexels.com/photos/6169668/pexels-photo-6169668.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Грузовой транспорт и склад" loading="lazy" />
+            <div class="solution-card__shade"></div>
+            <div class="solution-card__content"><span>04 / LTL</span><h3>Pegas LTL Cold</h3><p>Сборные температурные грузы, консолидация и регулярные маршруты.</p></div>
+          </article>
+
+          <article class="solution-card solution-card--wide tilt-card reveal-up">
+            <img src="https://images.pexels.com/photos/906494/pexels-photo-906494.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="Логистический склад" loading="lazy" />
+            <div class="solution-card__shade"></div>
+            <div class="solution-card__content"><span>05 / WAREHOUSE</span><h3>Pegas 3PL</h3><p>Хранение, кросс-докинг, обработка и распределение в едином операционном контуре.</p><a href="#calculator">Обсудить задачу →</a></div>
+          </article>
+
+          <article class="solution-card solution-card--accent tilt-card reveal-up">
+            <div class="orbital" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div class="solution-card__content"><span>06 / RISK CONTROL</span><h3>Pegas Control Tower</h3><p>Центр управления рейсами, температурой, простоями, документами и инцидентами 24/7.</p><button data-scroll="#control">Как это работает →</button></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="control" id="control">
+      <div class="control__photo" data-parallax="0.09"></div>
+      <div class="control__shade"></div>
+      <div class="container control__content">
+        <div class="control__intro">
+          <div class="section-tag reveal-up">PEGAS CONTROL TOWER</div>
+          <h2 class="reveal-up">Мы замечаем риск<br /><span>раньше клиента.</span></h2>
+          <p class="reveal-up">Рейс имеет статус, температуру, ETA, экономику, ответственного и сценарий реакции. Система не просто показывает проблему, а запускает действие.</p>
+        </div>
+
+        <div class="control-board glass-panel reveal-up">
+          <div class="control-board__head">
+            <div><small>CONTROL TOWER / LIVE MAP</small><b>14 рейсов под контролем</b></div>
+            <span class="status-badge status-badge--good"><i></i> Система в норме</span>
+          </div>
+          <div class="control-board__body">
+            <div class="map-panel">
+              <div class="map-grid"></div>
+              <svg viewBox="0 0 700 420" preserveAspectRatio="none">
+                <path class="map-route map-route--1" d="M70 330 C190 240 260 360 370 205 S520 115 640 75" />
+                <path class="map-route map-route--2" d="M110 100 C230 155 290 80 420 145 S555 260 650 315" />
+                <circle class="map-city" cx="70" cy="330" r="7"/><circle class="map-city" cx="370" cy="205" r="7"/><circle class="map-city" cx="640" cy="75" r="7"/>
+                <circle class="map-city" cx="110" cy="100" r="7"/><circle class="map-city" cx="420" cy="145" r="7"/><circle class="map-city" cx="650" cy="315" r="7"/>
+              </svg>
+              <div class="map-label label-1">Москва</div><div class="map-label label-2">Казань</div><div class="map-label label-3">Екатеринбург</div>
+              <div class="moving-truck"><span>▰</span></div>
             </div>
-
-            <div class="kpiRow">
-              <div class="kpi">
-                <strong class="count" data-to="112" data-suffix="%">0%</strong>
-                <span>More inquiries (example)</span>
-              </div>
-              <div class="kpi">
-                <strong class="count" data-to="42" data-prefix="-" data-suffix="%">0%</strong>
-                <span>Lower CPA (example)</span>
-              </div>
-              <div class="kpi">
-                <strong class="count" data-to="239" data-suffix="%">0%</strong>
-                <span>Traffic growth (example)</span>
-              </div>
-              <div class="kpi">
-                <strong class="count" data-to="34" data-suffix="%">0%</strong>
-                <span>Sales lift (example)</span>
-              </div>
+            <div class="risk-feed">
+              <div class="risk-item"><span class="risk-icon risk-icon--amber">!</span><div><b>PA-2038 / Москва → Уфа</b><small>Риск опоздания на 34 минуты</small></div><em>2 мин</em></div>
+              <div class="risk-item"><span class="risk-icon risk-icon--blue">°</span><div><b>PA-2041 / Пенза → Москва</b><small>Температура +0.6°C к плану</small></div><em>4 мин</em></div>
+              <div class="risk-item"><span class="risk-icon risk-icon--green">✓</span><div><b>PA-2027 / Москва → Казань</b><small>УПД подписан через ЭДО</small></div><em>8 мин</em></div>
+              <button class="feed-button" data-open="portalModal">Открыть полный мониторинг</button>
             </div>
           </div>
         </div>
       </div>
-
-      <div class="wave" style="margin-top:22px"></div>
     </section>
 
-    <section id="services">
-      <div class="sectionHead reveal">
-        <div>
-          <h2>Services</h2>
-          <p>Cards tilt in 3D, react to cursor position and animate on scroll. Clean, premium, fast.</p>
+    <section class="platform" id="platform">
+      <div class="container">
+        <div class="section-heading section-heading--center">
+          <div><div class="section-tag reveal-up">ЕДИНЫЙ DIGITAL-КОНТУР</div><h2 class="reveal-up">Пять систем.<br /><span>Одна правда о бизнесе.</span></h2></div>
+          <p class="reveal-up">Клиент, рейс, документы, деньги и управленческие выводы связаны между собой, а не живут в отдельных таблицах и чатах.</p>
         </div>
-        <a class="btn magnetic" href="#socials">Ask what fits your niche</a>
-      </div>
 
-      <div class="grid3">
-        <div class="card reveal tilt">
-          <span class="tag">Performance</span>
-          <h3>PPC & Paid Social</h3>
-          <p>Campaign structure, creatives, testing and optimization for qualified leads.</p>
-          <div class="list"><span class="pill">Google Ads</span><span class="pill">Meta Ads</span><span class="pill">Retarget</span></div>
+        <div class="platform-orbit reveal-up">
+          <div class="orbit-ring orbit-ring--1"></div><div class="orbit-ring orbit-ring--2"></div>
+          <button class="system-node node-crm" data-system="crm"><b>CRM</b><span>клиенты</span></button>
+          <button class="system-node node-tms" data-system="tms"><b>TMS</b><span>рейсы</span></button>
+          <button class="system-node node-1c" data-system="oneC"><b>1С</b><span>деньги</span></button>
+          <button class="system-node node-bi" data-system="bi"><b>BI</b><span>решения</span></button>
+          <button class="system-node node-client" data-system="client"><b>PORTAL</b><span>сервис</span></button>
+          <div class="orbit-core"><svg viewBox="0 0 64 64"><path d="M7 40c12-1 21-7 28-20 3 8 9 14 18 17-8 2-14 6-18 14-7-6-16-10-28-11Z" fill="currentColor"/></svg><strong>PEGAS<br />CORE</strong><small>единое ядро данных</small></div>
         </div>
-        <div class="card reveal d1 tilt">
-          <span class="tag">Search</span>
-          <h3>SEO & Content</h3>
-          <p>Technical SEO, site structure and content that ranks and converts.</p>
-          <div class="list"><span class="pill">Audit</span><span class="pill">Content plan</span><span class="pill">On-page</span></div>
-        </div>
-        <div class="card reveal d2 tilt">
-          <span class="tag">Conversion</span>
-          <h3>Landing & CRO</h3>
-          <p>Offer clarity, trust blocks, CTA flow and A/B-ready structure.</p>
-          <div class="list"><span class="pill">Copy</span><span class="pill">UX</span><span class="pill">Testing</span></div>
-        </div>
-      </div>
 
-      <div style="height:14px"></div>
-
-      <div class="grid3">
-        <div class="card reveal tilt">
-          <span class="tag">Social</span>
-          <h3>Social Media Marketing</h3>
-          <p>Content system that supports sales: hooks, scripts, and consistent visual rules.</p>
-          <div class="list"><span class="pill">Reels</span><span class="pill">Shorts</span><span class="pill">UGC</span></div>
-        </div>
-        <div class="card reveal d1 tilt">
-          <span class="tag">Lifecycle</span>
-          <h3>Email Marketing</h3>
-          <p>Welcome, nurture, and retention sequences that drive repeat revenue.</p>
-          <div class="list"><span class="pill">Flows</span><span class="pill">Segmentation</span><span class="pill">Retention</span></div>
-        </div>
-        <div class="card reveal d2 tilt">
-          <span class="tag">Full Stack</span>
-          <h3>Growth System</h3>
-          <p>Offer → creatives → landing → retarget → iteration. One plan, weekly momentum.</p>
-          <div class="list"><span class="pill">Roadmap</span><span class="pill">KPIs</span><span class="pill">Scale</span></div>
+        <div class="system-description glass-panel reveal-up" id="systemDescription">
+          <div><span id="systemKicker">CRM</span><h3 id="systemTitle">Клиенты и продажи</h3></div>
+          <p id="systemText">История контактов, заявки, ставки, конверсия, причины отказов и следующий шаг по каждому клиенту.</p>
+          <div class="system-description__result"><small>ЭФФЕКТ</small><b id="systemResult">Меньше потерянных лидов и прозрачная воронка</b></div>
         </div>
       </div>
     </section>
 
-    <section id="process">
-      <div class="sectionHead reveal">
-        <div>
-          <h2>Process</h2>
-          <p>Each step reveals on scroll; the section triggers subtle pulses in result cards below.</p>
+    <section class="passport">
+      <div class="container passport__grid">
+        <div class="passport__copy">
+          <div class="section-tag reveal-up">ТЕМПЕРАТУРНЫЙ ПАСПОРТ</div>
+          <h2 class="reveal-up">Качество, которое<br /><span>можно доказать.</span></h2>
+          <p class="reveal-up">После рейса клиент получает не обещание, а цифровой отчёт: температурную кривую, события, отклонения, реакцию диспетчера, окна и статус документов.</p>
+          <ul class="check-list reveal-up"><li>Температурная кривая по всему маршруту</li><li>Погрузка, выгрузка и фактическая ETA</li><li>Отклонения и принятые меры</li><li>Подтверждение закрывающих документов</li></ul>
+          <button class="primary-button magnetic reveal-up" id="passportButton">Сформировать демо-паспорт</button>
         </div>
-      </div>
 
-      <div class="steps">
-        <div class="step reveal"><b>STEP 01</b><strong>Audit</strong><span>Offer, competitors, tracking basics, landing clarity, channel fit.</span></div>
-        <div class="step reveal d1"><b>STEP 02</b><strong>Plan</strong><span>30-day roadmap: hypotheses, KPIs, creatives, pages, budget logic.</span></div>
-        <div class="step reveal d2"><b>STEP 03</b><strong>Launch</strong><span>First tests, quick iteration cycle, fast learning.</span></div>
-        <div class="step reveal d3"><b>STEP 04</b><strong>Optimize</strong><span>Scale winners, cut losers, improve CPL/ROAS, refine messaging.</span></div>
-      </div>
-    </section>
-
-    <section id="results">
-      <div class="sectionHead reveal">
-        <div>
-          <h2>Results (motion accents)</h2>
-          <p>Count-up numbers + sweep highlights. Replace examples with real metrics any time.</p>
-        </div>
-        <a class="btn primary magnetic" href="#socials">Get your AUDIT</a>
-      </div>
-
-      <div class="stats" id="statsGrid">
-        <div class="stat reveal"><strong class="count" data-to="112" data-suffix="%">0%</strong><span>More inquiries (example)</span></div>
-        <div class="stat reveal d1"><strong class="count" data-to="42" data-prefix="-" data-suffix="%">0%</strong><span>Lower CPA (example)</span></div>
-        <div class="stat reveal d2"><strong class="count" data-to="239" data-suffix="%">0%</strong><span>Traffic growth (example)</span></div>
-        <div class="stat reveal d3"><strong class="count" data-to="34" data-suffix="%">0%</strong><span>Sales lift (example)</span></div>
-      </div>
-    </section>
-
-    <section id="socials">
-      <div class="sectionHead reveal">
-        <div>
-          <h2>Social links only</h2>
-          <p>No forms. No embeds. Message us. Press <b>A</b> to copy the word <b>AUDIT</b>.</p>
-        </div>
-      </div>
-
-      <div class="socialGrid">
-        <div class="socialCard reveal tilt">
-          <h3>Copy‑paste message</h3>
-          <p>
-            Send: <b>AUDIT</b> + your niche + city + average ticket + monthly goal.
-            We reply with 3 next steps and the best channel to start with.
-          </p>
-          <div class="socialBtns">
-            <a class="btn primary magnetic" target="_blank" rel="noopener" href="https://instagram.com/">Instagram</a>
-            <a class="btn magnetic" target="_blank" rel="noopener" href="https://t.me/">Telegram</a>
+        <div class="passport-card reveal-right">
+          <div class="passport-card__head"><div class="mini-brand">PEGAS / COLD STANDARD</div><span>PA-2041</span></div>
+          <div class="passport-card__route"><small>МАРШРУТ</small><b>Москва → Самара</b><em>Рефрижератор • +2…+6°C</em></div>
+          <div class="passport-card__chart">
+            <svg viewBox="0 0 620 220" preserveAspectRatio="none">
+              <defs><linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#70e7ff" stop-opacity=".35"/><stop offset="1" stop-color="#70e7ff" stop-opacity="0"/></linearGradient></defs>
+              <g class="chart-lines"><line x1="0" y1="40" x2="620" y2="40"/><line x1="0" y1="105" x2="620" y2="105"/><line x1="0" y1="170" x2="620" y2="170"/></g>
+              <path class="chart-area" d="M0 125 C45 112 78 135 120 116 S195 110 238 124 S310 100 360 116 S430 130 475 108 S560 115 620 97 L620 220 L0 220 Z"/>
+              <path class="chart-line" d="M0 125 C45 112 78 135 120 116 S195 110 238 124 S310 100 360 116 S430 130 475 108 S560 115 620 97"/>
+            </svg>
           </div>
-        </div>
-
-        <div class="socialCard reveal d1 tilt">
-          <h3>Follow & see updates</h3>
-          <p>Short content, examples, and behind-the-scenes. Replace the links with your real profiles.</p>
-          <div class="socialBtns">
-            <a class="btn magnetic" target="_blank" rel="noopener" href="https://www.tiktok.com/">TikTok</a>
-            <a class="btn magnetic" target="_blank" rel="noopener" href="https://www.youtube.com/">YouTube</a>
-          </div>
+          <div class="passport-card__stats"><div><small>MIN</small><b>+2.1°</b></div><div><small>AVG</small><b>+2.4°</b></div><div><small>MAX</small><b>+2.8°</b></div><div><small>ОТКЛОНЕНИЯ</small><b>0</b></div></div>
+          <div class="passport-card__seal"><i>✓</i><span>Режим соблюдён<br /><small>PEGAS COLD STANDARD</small></span></div>
         </div>
       </div>
     </section>
 
-    <section id="faq">
-      <div class="sectionHead reveal">
-        <div>
-          <h2>FAQ</h2>
-          <p>Accordion + smooth scroll + motion tuned for a premium feel.</p>
+    <section class="process" id="process">
+      <div class="container">
+        <div class="section-heading">
+          <div><div class="section-tag reveal-up">ИДЕАЛЬНЫЙ ПУТЬ ЗАКАЗА</div><h2 class="reveal-up">От заявки до денег.<br /><span>Без ручного хаоса.</span></h2></div>
+          <p class="reveal-up">Перевозка не заканчивается на выгрузке. Она заканчивается, когда документы закрыты, претензий нет, а оплата пришла в срок.</p>
         </div>
-      </div>
-
-      <details class="reveal">
-        <summary>How fast do you see results?</summary>
-        <div class="faqText">
-          Ads typically show signal within 7–14 days (first tests). SEO is longer (often 2–4+ months).
-          Speed depends on niche, budget, and your starting point.
-        </div>
-      </details>
-      <details class="reveal d1">
-        <summary>What do you need from us?</summary>
-        <div class="faqText">
-          Your offer, your goal, basic access to ad accounts (if doing ads), and quick feedback on messaging.
-          We keep it simple and transparent.
-        </div>
-      </details>
-      <details class="reveal d2">
-        <summary>Can we start small?</summary>
-        <div class="faqText">
-          Yes. Strong start: one channel + one landing + weekly optimization. Scale once KPIs stabilize.
-        </div>
-      </details>
-
-      <div style="height:14px"></div>
-
-      <div class="kinetic reveal d3" style="transform:none">
-        <div class="kineticInner" style="display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap">
-          <div>
-            <div style="font-weight:900; font-size:16px">Ready to start?</div>
-            <div style="color:var(--muted); margin-top:6px; line-height:1.8">Message us with <b>AUDIT</b> — we’ll reply with next steps.</div>
-          </div>
-          <a class="btn primary magnetic" href="#socials">Go to socials</a>
+        <div class="process-line">
+          <article class="process-step reveal-up"><span>01</span><div class="process-step__image"><img src="https://images.pexels.com/photos/6169659/pexels-photo-6169659.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Заявка на перевозку" loading="lazy" /></div><h3>Заявка и SLA</h3><p>Груз, режим, окна, документы и ответственность фиксируются сразу.</p></article>
+          <article class="process-step reveal-up"><span>02</span><div class="process-step__image"><img src="https://images.pexels.com/photos/5025669/pexels-photo-5025669.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Планирование маршрута" loading="lazy" /></div><h3>Планирование</h3><p>Машина, перевозчик, экономика и резервный сценарий проходят проверку.</p></article>
+          <article class="process-step reveal-up"><span>03</span><div class="process-step__image"><img src="https://images.pexels.com/photos/4483610/pexels-photo-4483610.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Контроль перевозки" loading="lazy" /></div><h3>Контроль 24/7</h3><p>ETA, температура, простои и инциденты контролируются в моменте.</p></article>
+          <article class="process-step reveal-up"><span>04</span><div class="process-step__image"><img src="https://images.pexels.com/photos/6863183/pexels-photo-6863183.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Документы и завершение рейса" loading="lazy" /></div><h3>Паспорт и ЭДО</h3><p>Клиент получает доказательство качества и комплект документов.</p></article>
         </div>
       </div>
     </section>
 
-    <footer>
-      <div class="frow">
-        <div>© 2026 NS Marketing LA · Motion-first concept (no images)</div>
-        <div class="smallLinks">
-          <a href="#services">Services</a>
-          <a href="#results">Results</a>
-          <a href="#socials">Socials</a>
+    <section class="calculator" id="calculator">
+      <div class="calculator__image"></div><div class="calculator__shade"></div>
+      <div class="container calculator__grid">
+        <div class="calculator__copy">
+          <div class="section-tag reveal-up">БЫСТРЫЙ РАСЧЁТ</div>
+          <h2 class="reveal-up">Дайте маршрут.<br /><span>Система соберёт заявку.</span></h2>
+          <p class="reveal-up">Демонстрационный калькулятор показывает предварительный ориентир и имитирует передачу заявки в CRM.</p>
         </div>
+        <form class="quote-form glass-panel reveal-right" id="quoteForm">
+          <div class="form-row"><label>Откуда<input id="fromCity" required placeholder="Москва" /></label><label>Куда<input id="toCity" required placeholder="Самара" /></label></div>
+          <div class="form-row"><label>Расстояние, км<input id="distance" type="number" min="50" required placeholder="1050" /></label><label>Режим<select id="temperature"><option value="1">Без режима</option><option value="1.12">+2…+6°C</option><option value="1.20">0…−18°C</option><option value="1.28">Строгий режим</option></select></label></div>
+          <div class="form-row"><label>Вес, тонн<input id="weight" type="number" min="0.1" max="25" step="0.1" value="20" /></label><label>Срочность<select id="urgency"><option value="1">Плановая</option><option value="1.15">В течение 24 часов</option><option value="1.25">Срочная</option></select></label></div>
+          <label>Комментарий<textarea placeholder="Груз, окна, требования к машине и документам"></textarea></label>
+          <button class="primary-button magnetic" type="submit">Рассчитать и создать заявку</button>
+          <div class="quote-result" id="quoteResult"></div>
+          <small class="form-disclaimer">Расчёт демонстрационный. Финальная ставка зависит от маршрута, груза, окон, простоев и обратной загрузки.</small>
+        </form>
       </div>
-    </footer>
+    </section>
   </main>
 
-  <!-- Drawer -->
-  <div class="drawer" id="drawer" aria-hidden="true">
-    <div class="drawerPanel">
-      <div class="drawerHeader">
-        <div style="display:flex;align-items:center;gap:10px">
-          <div class="mark" aria-hidden="true" style="width:34px;height:34px;border-radius:14px"></div>
-          <div>
-            <div style="font-weight:900">NS Marketing</div>
-            <div style="color:var(--muted);font-size:12px;margin-top:2px">Navigation</div>
-          </div>
+  <footer>
+    <div class="container footer__top">
+      <div><a class="brand brand--footer" href="#hero"><svg viewBox="0 0 64 64"><path d="M7 40c12-1 21-7 28-20 3 8 9 14 18 17-8 2-14 6-18 14-7-6-16-10-28-11Z" fill="currentColor"/></svg><span><b>ПЕГАС-АВТО</b><small>COLD-CHAIN OPERATOR</small></span></a><p>Демонстрационный концепт сайта и цифровой платформы.</p></div>
+      <div class="footer__links"><div><b>Решения</b><a href="#solutions">Fresh</a><a href="#solutions">Meat</a><a href="#solutions">Retail</a><a href="#solutions">LTL Cold</a></div><div><b>Платформа</b><a href="#control">Control Tower</a><a href="#platform">CRM / TMS / BI</a><button data-open="portalModal">Кабинет клиента</button><button data-open="carrierModal">Стать перевозчиком</button></div></div>
+    </div>
+    <div class="container footer__bottom"><span>© 2026 Пегас-Авто. Демонстрационный прототип.</span><span>Фото в прототипе: Pexels. Перед публикацией заменить на реальные материалы компании.</span></div>
+  </footer>
+
+  <div class="modal" id="portalModal" role="dialog" aria-modal="true" aria-label="Демо личного кабинета">
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__window portal-window">
+      <button class="modal__close" data-close>×</button>
+      <div class="portal-sidebar">
+        <div class="portal-logo"><svg viewBox="0 0 64 64"><path d="M7 40c12-1 21-7 28-20 3 8 9 14 18 17-8 2-14 6-18 14-7-6-16-10-28-11Z" fill="currentColor"/></svg><b>PEGAS<br />PORTAL</b></div>
+        <button class="portal-tab active" data-portal-tab="shipments">Рейсы</button>
+        <button class="portal-tab" data-portal-tab="temperature">Температура</button>
+        <button class="portal-tab" data-portal-tab="documents">Документы</button>
+        <button class="portal-tab" data-portal-tab="analytics">Аналитика</button>
+      </div>
+      <div class="portal-content">
+        <div class="portal-head"><div><small>ЛИЧНЫЙ КАБИНЕТ / ДЕМО</small><h3>Добрый день, клиент</h3></div><span class="status-badge status-badge--good"><i></i> Все системы работают</span></div>
+        <div class="portal-panel active" id="shipments">
+          <div class="portal-kpis"><div><small>Активные рейсы</small><b>4</b><em>3 в норме</em></div><div><small>Рейсы в SLA</small><b>98.1%</b><em>месяц</em></div><div><small>Документы готовы</small><b>12</b><em>30 дней</em></div><div><small>Обращения</small><b>1</b><em>в работе</em></div></div>
+          <div class="shipment-table"><div class="shipment-row shipment-row--head"><span>Маршрут</span><span>Режим</span><span>ETA</span><span>Статус</span></div><div class="shipment-row"><b>Москва → Самара</b><span>+2…+6°C</span><span>18:40</span><em class="table-status good">В пути</em></div><div class="shipment-row"><b>Пенза → Москва</b><span>−18°C</span><span>07:20</span><em class="table-status warn">+20 мин</em></div><div class="shipment-row"><b>Москва → Казань</b><span>+4°C</span><span>Сегодня</span><em class="table-status good">Выгрузка</em></div></div>
         </div>
-        <button class="btn ghost magnetic" id="closeBtn" type="button">Close</button>
-      </div>
-      <div class="drawerLinks">
-        <a href="#services" data-close>Services <span>What we do</span></a>
-        <a href="#process" data-close>Process <span>How we work</span></a>
-        <a href="#results" data-close>Results <span>Metrics</span></a>
-        <a href="#socials" data-close>Socials <span>Message us</span></a>
-        <a href="#faq" data-close>FAQ <span>Answers</span></a>
-      </div>
-      <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap">
-        <a class="btn primary magnetic" href="#socials" data-close>Message us</a>
-        <a class="btn magnetic" href="#services" data-close>Explore</a>
+        <div class="portal-panel" id="temperature"><div class="portal-chart"><div class="portal-chart__head"><div><small>PA-2041</small><b>Температурная кривая</b></div><span class="table-status good">Норма</span></div><svg viewBox="0 0 900 300" preserveAspectRatio="none"><g class="chart-lines"><line x1="0" y1="50" x2="900" y2="50"/><line x1="0" y1="150" x2="900" y2="150"/><line x1="0" y1="250" x2="900" y2="250"/></g><path class="chart-area" d="M0 170 C70 145 110 183 180 150 S300 140 370 168 S500 120 575 155 S700 175 770 137 S850 150 900 120 L900 300 L0 300 Z"/><path class="chart-line" d="M0 170 C70 145 110 183 180 150 S300 140 370 168 S500 120 575 155 S700 175 770 137 S850 150 900 120"/></svg></div></div>
+        <div class="portal-panel" id="documents"><div class="document-grid"><article><span>PDF</span><div><b>Температурный паспорт</b><small>PA-2041 • сформирован</small></div><button id="modalPassportButton">Скачать</button></article><article><span>УПД</span><div><b>УПД №4182</b><small>Подписан через ЭДО</small></div><em>Готов</em></article><article><span>ТТН</span><div><b>ТТН №2041</b><small>Оригинал получен</small></div><em>Готов</em></article></div></div>
+        <div class="portal-panel" id="analytics"><div class="analytics-grid"><article><small>Рейсы без срыва</small><b>97.8%</b><span style="width:97.8%"></span></article><article><small>Документы в SLA</small><b>94.6%</b><span style="width:94.6%"></span></article><article><small>Средний простой</small><b>1ч 12м</b><span style="width:63%"></span></article><article><small>Средняя оценка</small><b>4.9 / 5</b><span style="width:98%"></span></article></div></div>
       </div>
     </div>
   </div>
 
-  <script>
-    // ===== Hotspot highlight on buttons =====
-    document.querySelectorAll('.btn').forEach(btn => {
-      btn.addEventListener('pointermove', (e) => {
-        const r = btn.getBoundingClientRect();
-        const x = ((e.clientX - r.left) / r.width) * 100;
-        const y = ((e.clientY - r.top) / r.height) * 100;
-        btn.style.setProperty('--mx', x + '%');
-        btn.style.setProperty('--my', y + '%');
-      });
-    });
+  <div class="modal" id="trackModal" role="dialog" aria-modal="true" aria-label="Отследить рейс"><div class="modal__backdrop" data-close></div><div class="modal__window small-window"><button class="modal__close" data-close>×</button><div class="section-tag">ТРЕКИНГ РЕЙСА</div><h3>Введите номер заявки</h3><p>Для демонстрации используйте номер <b>PA-2041</b>.</p><form id="trackForm"><input id="trackInput" placeholder="PA-2041" required /><button class="primary-button" type="submit">Найти рейс</button></form><div class="track-result" id="trackResult"></div></div></div>
 
-    // ===== Smooth scroll =====
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-      a.addEventListener('click', (e) => {
-        const href = a.getAttribute('href');
-        if (!href || href === '#') return;
-        const el = document.querySelector(href);
-        if (el){
-          e.preventDefault();
-          const top = el.getBoundingClientRect().top + window.pageYOffset - 86;
-          window.scrollTo({ top, behavior: 'smooth' });
-        }
-      });
-    });
+  <div class="modal" id="carrierModal" role="dialog" aria-modal="true" aria-label="Стать перевозчиком"><div class="modal__backdrop" data-close></div><div class="modal__window small-window"><button class="modal__close" data-close>×</button><div class="section-tag">ПАРТНЁРСКАЯ СЕТЬ</div><h3>Подключиться к Pegas Carrier Club</h3><p>Быстрые выплаты, понятный рейтинг, приоритетные рейсы и единый стандарт качества.</p><form id="carrierForm"><input required placeholder="Название компании" /><input required placeholder="Телефон или email" /><select><option>Рефрижераторы</option><option>Тенты</option><option>Изотермы</option><option>Смешанный парк</option></select><button class="primary-button" type="submit">Отправить заявку</button></form><div class="track-result" id="carrierResult"></div></div></div>
 
-    // ===== Drawer =====
-    const drawer = document.getElementById('drawer');
-    const menuBtn = document.getElementById('menuBtn');
-    const closeBtn = document.getElementById('closeBtn');
-    function openDrawer(){ drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false'); }
-    function closeDrawer(){ drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); }
-    menuBtn?.addEventListener('click', openDrawer);
-    closeBtn?.addEventListener('click', closeDrawer);
-    drawer?.addEventListener('click', (e) => { if (e.target === drawer) closeDrawer(); });
-    drawer?.querySelectorAll('[data-close]')?.forEach(a => a.addEventListener('click', closeDrawer));
-    window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
-
-    // ===== Reveal on scroll =====
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(en => { if (en.isIntersecting) en.target.classList.add('in'); });
-    }, { threshold: 0.14 });
-    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-
-    // ===== 3D tilt =====
-    function tilt(el, strength=10){
-      const onMove = (e) => {
-        const r = el.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width - 0.5;
-        const y = (e.clientY - r.top) / r.height - 0.5;
-        el.style.transform = `rotateX(${(-y*strength).toFixed(2)}deg) rotateY(${(x*strength).toFixed(2)}deg) translateY(-1px)`;
-      };
-      const onLeave = () => { el.style.transform = 'rotateX(0deg) rotateY(0deg)'; };
-      el.addEventListener('pointermove', onMove);
-      el.addEventListener('pointerleave', onLeave);
-    }
-    document.querySelectorAll('.tilt').forEach(el => tilt(el, 10));
-    const tiltCard = document.getElementById('tiltCard');
-    if (tiltCard) tilt(tiltCard, 8);
-
-    // ===== Magnetic buttons =====
-    document.querySelectorAll('.magnetic').forEach(el => {
-      const strength = 18;
-      el.addEventListener('pointermove', (e) => {
-        const r = el.getBoundingClientRect();
-        const x = e.clientX - (r.left + r.width/2);
-        const y = e.clientY - (r.top + r.height/2);
-        el.style.transform = `translate(${x/strength}px, ${y/strength}px)`;
-      });
-      el.addEventListener('pointerleave', () => el.style.transform = 'translate(0,0)');
-    });
-
-    // ===== Count up (used for KPIs + stats) =====
-    const counters = document.querySelectorAll('.count');
-    const counterIO = new IntersectionObserver((entries) => {
-      entries.forEach(en => {
-        if (!en.isIntersecting) return;
-        const el = en.target;
-        if (el.dataset.done) return;
-        el.dataset.done = '1';
-        const to = parseFloat(el.dataset.to || '0');
-        const prefix = el.dataset.prefix || '';
-        const suffix = el.dataset.suffix || '';
-        const start = performance.now();
-        const dur = 1100;
-        function tick(t){
-          const p = Math.min(1, (t - start) / dur);
-          const eased = 1 - Math.pow(1 - p, 3);
-          const v = Math.round(to * eased);
-          el.textContent = `${prefix}${v}${suffix}`;
-          if (p < 1) requestAnimationFrame(tick);
-        }
-        requestAnimationFrame(tick);
-      });
-    }, { threshold: 0.35 });
-    counters.forEach(c => counterIO.observe(c));
-
-    // ===== Pulse stats sweep when results section comes into view =====
-    const statsGrid = document.getElementById('statsGrid');
-    const statCards = statsGrid ? Array.from(statsGrid.querySelectorAll('.stat')) : [];
-    const pulseIO = new IntersectionObserver((entries) => {
-      entries.forEach(en => {
-        if (!en.isIntersecting) return;
-        statCards.forEach((c, i) => {
-          setTimeout(() => {
-            c.classList.remove('pulse');
-            void c.offsetWidth;
-            c.classList.add('pulse');
-          }, i * 140);
-        });
-      });
-    }, { threshold: 0.25 });
-    if (statsGrid) pulseIO.observe(statsGrid);
-
-    // ===== Keyboard shortcut: press "A" to copy AUDIT =====
-    async function copyAudit(){
-      try{
-        await navigator.clipboard.writeText('AUDIT');
-        toast('Copied: AUDIT');
-      }catch(e){
-        const t = document.createElement('textarea');
-        t.value = 'AUDIT';
-        document.body.appendChild(t);
-        t.select();
-        document.execCommand('copy');
-        t.remove();
-        toast('Copied: AUDIT');
-      }
-    }
-    window.addEventListener('keydown', (e) => {
-      if (e.key.toLowerCase() === 'a' && !e.metaKey && !e.ctrlKey && !e.altKey){
-        const tag = (document.activeElement && document.activeElement.tagName || '').toLowerCase();
-        if (tag === 'input' || tag === 'textarea') return;
-        copyAudit();
-      }
-    });
-
-    // ===== Toast =====
-    const toastEl = document.createElement('div');
-    Object.assign(toastEl.style,{
-      position:'fixed', left:'50%', bottom:'18px', transform:'translateX(-50%)',
-      padding:'10px 12px', borderRadius:'14px', border:'1px solid rgba(255,255,255,.14)',
-      background:'rgba(7,7,12,.72)', backdropFilter:'blur(12px)',
-      color:'rgba(233,238,252,.92)', boxShadow:'0 18px 60px rgba(0,0,0,.45)',
-      fontWeight:'900', fontSize:'13px', opacity:'0', pointerEvents:'none',
-      transition:'opacity .25s ease, transform .25s ease', zIndex:'120'
-    });
-    document.body.appendChild(toastEl);
-    let toastTimer = null;
-    function toast(msg){
-      toastEl.textContent = msg;
-      toastEl.style.opacity = '1';
-      toastEl.style.transform = 'translateX(-50%) translateY(-2px)';
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
-        toastEl.style.opacity = '0';
-        toastEl.style.transform = 'translateX(-50%) translateY(6px)';
-      }, 1400);
-    }
-
-    // ===== Word swap (hero) =====
-    const swapWord = document.getElementById('swapWord');
-    const words = ['lead system','revenue engine','growth loop','conversion machine'];
-    let wi = 0;
-    setInterval(() => {
-      wi = (wi + 1) % words.length;
-      swapWord.style.opacity = '0';
-      swapWord.style.filter = 'blur(8px)';
-      setTimeout(() => {
-        swapWord.textContent = words[wi];
-        swapWord.style.opacity = '1';
-        swapWord.style.filter = 'blur(0)';
-      }, 220);
-    }, 2800);
-
-    // ===== Scramble effect (runs once after load) =====
-    const scr = document.getElementById('scramble');
-    const original = scr ? scr.textContent.trim() : '';
-    function scrambleText(el, text){
-      const chars = '!<>-_\/[]{}—=+*^?#________';
-      let frame = 0;
-      const total = 26;
-      const interval = setInterval(() => {
-        frame++;
-        const p = frame / total;
-        const reveal = Math.floor(text.length * p);
-        let out = '';
-        for (let i=0;i<text.length;i++){
-          if (i < reveal) out += text[i];
-          else out += chars[Math.floor(Math.random()*chars.length)];
-        }
-        el.textContent = out;
-        if (frame >= total){
-          clearInterval(interval);
-          el.textContent = text;
-        }
-      }, 22);
-    }
-    if (scr) setTimeout(() => scrambleText(scr, original), 380);
-
-    // ===== Cursor trails =====
-    const t1 = document.getElementById('trail1');
-    const t2 = document.getElementById('trail2');
-    let mx = 0, my = 0, x1 = 0, y1 = 0, x2 = 0, y2 = 0;
-    window.addEventListener('pointermove', (e) => { mx = e.clientX; my = e.clientY; t1.style.opacity='1'; t2.style.opacity='.8'; });
-    function anim(){
-      x1 += (mx - x1) * 0.22;
-      y1 += (my - y1) * 0.22;
-      x2 += (mx - x2) * 0.12;
-      y2 += (my - y2) * 0.12;
-      t1.style.transform = `translate(${x1-7}px, ${y1-7}px)`;
-      t2.style.transform = `translate(${x2-11}px, ${y2-11}px)`;
-      requestAnimationFrame(anim);
-    }
-    anim();
-
-    // ===== Particle canvas (subtle) =====
-    const canvas = document.getElementById('fx');
-    const ctx = canvas.getContext('2d');
-    let W=0,H=0, DPR=1;
-    function resize(){
-      DPR = Math.min(2, window.devicePixelRatio || 1);
-      W = canvas.clientWidth; H = canvas.clientHeight;
-      canvas.width = Math.floor(W * DPR);
-      canvas.height = Math.floor(H * DPR);
-      ctx.setTransform(DPR,0,0,DPR,0,0);
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    const N = 72;
-    const pts = Array.from({length:N}).map(() => ({
-      x: Math.random()*W, y: Math.random()*H,
-      vx: (Math.random()-.5)*0.35, vy: (Math.random()-.5)*0.35,
-      r: 1.2 + Math.random()*1.8,
-      c: Math.random()<0.33 ? 'rgba(124,92,255,.55)' : (Math.random()<0.5 ? 'rgba(46,233,166,.45)' : 'rgba(255,207,92,.35)')
-    }));
-
-    function step(){
-      ctx.clearRect(0,0,W,H);
-      // move
-      for (const p of pts){
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < -20) p.x = W+20;
-        if (p.x > W+20) p.x = -20;
-        if (p.y < -20) p.y = H+20;
-        if (p.y > H+20) p.y = -20;
-      }
-      // links
-      for (let i=0;i<pts.length;i++){
-        for (let j=i+1;j<pts.length;j++){
-          const a = pts[i], b = pts[j];
-          const dx = a.x-b.x, dy=a.y-b.y;
-          const d = Math.hypot(dx,dy);
-          if (d < 130){
-            const alpha = (1 - d/130) * 0.12;
-            ctx.strokeStyle = `rgba(233,238,252,${alpha})`;
-            ctx.lineWidth = 1;
-            ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
-          }
-        }
-      }
-      // dots
-      for (const p of pts){
-        ctx.fillStyle = p.c;
-        ctx.beginPath();
-        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-        ctx.fill();
-      }
-      requestAnimationFrame(step);
-    }
-    step();
-  </script>
+  <div class="toast" id="toast"><i>✓</i><span></span></div>
+  <script src="assets/app.js"></script>
 </body>
 </html>
