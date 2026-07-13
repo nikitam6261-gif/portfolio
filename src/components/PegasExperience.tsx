@@ -26,7 +26,6 @@ const systems = [
 
 export default function PegasExperience() {
   const [stage, setStage] = useState(0);
-  const [progress, setProgress] = useState(0);
   const [menu, setMenu] = useState(false);
   const [modal, setModal] = useState<ModalName>(null);
   const [activeSystem, setActiveSystem] = useState(0);
@@ -40,8 +39,10 @@ export default function PegasExperience() {
     raf = requestAnimationFrame(loop);
     const onScroll = () => {
       const p = Math.min(1, window.scrollY / (window.innerHeight * 3.2));
-      setProgress(p);
-      setStage(p < 0.22 ? 0 : p < 0.52 ? 1 : p < 0.78 ? 2 : 3);
+      document.documentElement.style.setProperty('--page-progress', String(p));
+      document.documentElement.style.setProperty('--route-progress', `${38 + p * 56}%`);
+      const nextStage = p < 0.22 ? 0 : p < 0.52 ? 1 : p < 0.78 ? 2 : 3;
+      setStage((current) => current === nextStage ? current : nextStage);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
@@ -50,7 +51,9 @@ export default function PegasExperience() {
 
   useEffect(() => {
     document.body.style.overflow = modal || menu ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === 'Escape') { setModal(null); setMenu(false); } };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => { document.body.style.overflow = ''; window.removeEventListener('keydown', closeOnEscape); };
   }, [modal, menu]);
 
   const stageCopy = useMemo(() => [
@@ -79,7 +82,7 @@ export default function PegasExperience() {
   return (
     <div className="site-shell">
       <div className="grain" />
-      <div className="scroll-line"><i style={{ transform: `scaleX(${progress})` }} /></div>
+      <div className="scroll-line"><i /></div>
 
       <header className="nav">
         <a className="logo" href="#home" aria-label="Пегас-Авто"><PegasMark /><span><b>ПЕГАС-АВТО</b><small>COLD-CHAIN OPERATOR</small></span></a>
@@ -106,7 +109,7 @@ export default function PegasExperience() {
 
             <div className={`telemetry ${stage > 0 ? 'visible' : ''}`}>
               <div className="telemetry-head"><span><i /> LIVE CONTROL</span><b>PA-2041</b></div>
-              <div className="telemetry-route"><strong>МОСКВА</strong><i><em style={{ width: `${38 + progress * 56}%` }} /></i><strong>САМАРА</strong></div>
+              <div className="telemetry-route"><strong>МОСКВА</strong><i><em /></i><strong>САМАРА</strong></div>
               <div className="telemetry-data"><div><Thermometer /><span>ТЕМПЕРАТУРА<b>+2.4°C</b></span><em>НОРМА</em></div><div><Clock3 /><span>ETA<b>18:40</b></span><em>В СРОК</em></div><div><Gauge /><span>СКОРОСТЬ<b>76 км/ч</b></span><em>СТАБИЛЬНО</em></div></div>
               <div className="temperature-graph">{[42,55,48,65,57,71,64,82,73,87,79,91,84,88,76,90].map((h,i)=><i key={i} style={{height:`${h}%`}} />)}</div>
             </div>
