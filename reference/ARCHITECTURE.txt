@@ -1,0 +1,1 @@
+Demo architecture: static HTML/CSS/JS + LocalStorage. Production target: API-first backend, PostgreSQL, auth/RBAC, 1C/TMS/GPS/EDO integrations, routing provider abstraction and barcode/QR scanning.
