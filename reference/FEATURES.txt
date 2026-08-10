@@ -1,0 +1,1 @@
+Migrated concepts: customer directory, pallet registry, pickup planning, linehaul trips, cross-dock terminal, temperature regimes, weight and LDM capacity controls.
