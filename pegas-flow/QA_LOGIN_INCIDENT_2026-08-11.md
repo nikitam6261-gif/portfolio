@@ -45,6 +45,17 @@ Server-side self-test passed all of the following in the live Supabase project:
 
 Live health checks returned HTTP 200 for both the new core API and Telegram webhook. Telegram webhook v7 reported its core API as healthy.
 
+Telegram `getWebhookInfo` was also checked directly through a temporary server-side QA function. It returned:
+
+- webhook URL = the production Supabase `telegram-webhook` URL;
+- pending update count = 0;
+- last error date/message = none;
+- allowed updates = `message`.
+
+The temporary Telegram QA endpoint was disabled immediately after the check.
+
+Supabase Security Advisor currently reports zero security lints. Duplicate-index warnings from the Performance Advisor were removed; remaining performance entries are informational unused-index notices expected for an almost-empty new operational database.
+
 Frontend static validation:
 
 - standalone JavaScript syntax passes `node --check`;
