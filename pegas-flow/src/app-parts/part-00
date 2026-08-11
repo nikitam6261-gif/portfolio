@@ -1,0 +1,37 @@
+import React,{useEffect,useMemo,useState} from 'react';
+import {api,getToken,setToken,redeemCode,telegramSession} from './api';
+import {ROLE_NAMES,STATUS,TEMP,NAV,CITY_COORDS} from './data';
+import {Activity,AlertTriangle,Archive,ArrowRight,BarChart3,Box,Boxes,Building2,CalendarClock,CheckCircle2,ChevronDown,ChevronRight,ClipboardList,Clock3,Download,Edit3,ExternalLink,Eye,Filter,Forklift,Grid3X3,HelpCircle,LayoutDashboard,Map,Menu,MessageSquare,Package,Plus,RefreshCw,Route,Search,Send,Settings2,Shield,Truck,Users,Warehouse,X,Zap,LogOut,KeyRound,Command,MoreHorizontal,Trash2,Save,MapPin,Thermometer,Weight,Layers3,ScanLine,FileText,TrendingUp,CircleGauge} from 'lucide-react';
+
+const icons={tower:LayoutDashboard,orders:ClipboardList,pallets:Package,pickup:Truck,warehouse:Warehouse,trips:Route,fleet:Truck,customers:Building2,analytics:BarChart3,ai:MessageSquare,users:Users};
+const fmt=n=>new Intl.NumberFormat('ru-RU',{maximumFractionDigits:1}).format(Number(n||0));
+const dt=v=>v?new Date(v).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'—';
+const dateOnly=v=>v?new Date(v).toLocaleDateString('ru-RU'):'—';
+const has=(p,perms=[])=>perms.includes('*')||perms.includes(p);
+const cls=(...a)=>a.filter(Boolean).join(' ');
+function Status({value}){const [l,t]=STATUS[value]||[value||'—','neutral'];return <span className={`badge ${t}`}>{l}</span>}
+function Temp({value}){return <span className="temp"><Thermometer size={13}/>{TEMP[value]||value||'по грузу'}</span>}
+function Empty({title='Пока пусто',text='Добавьте первую запись, чтобы начать работу.'}){return <div className="empty"><div className="emptyIcon"><Box size={26}/></div><b>{title}</b><span>{text}</span></div>}
+function Button({children,variant='primary',icon:Icon,onClick,disabled,type='button',className=''}){return <button type={type} disabled={disabled} onClick={onClick} className={`btn ${variant} ${className}`}>{Icon&&<Icon size={16}/>}<span>{children}</span></button>}
+function Field({label,children,hint}){return <label className="field"><span>{label}</span>{children}{hint&&<small>{hint}</small>}</label>}
+function Drawer({open,title,subtitle,onClose,children,wide=false}){if(!open)return null;return <div className="drawerWrap" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}><aside className={cls('drawer',wide&&'wide')}><div className="drawerHead"><div><h3>{title}</h3>{subtitle&&<p>{subtitle}</p>}</div><button className="iconBtn" onClick={onClose}><X size={19}/></button></div><div className="drawerBody">{children}</div></aside></div>}
+function Modal({open,title,onClose,children}){if(!open)return null;return <div className="modalWrap" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}><div className="modal"><div className="drawerHead"><h3>{title}</h3><button className="iconBtn" onClick={onClose}><X size={18}/></button></div><div className="modalBody">{children}</div></div></div>}
+function Loading(){return <div className="splash"><div className="brandMark">P</div><div><b>PEGAS FLOW</b><span>подключение к Control Tower</span></div><div className="spinner"/></div>}
+
+function Login({onLogin}){
+ const [code,setCode]=useState('');const [busy,setBusy]=useState(false);const [err,setErr]=useState('');
+ async function submit(e){e.preventDefault();setBusy(true);setErr('');try{const d=await redeemCode(code);onLogin(d)}catch(e){setErr(e.message)}finally{setBusy(false)}}
+ return <div className="loginPage"><div className="loginAside"><div className="loginLogo"><div className="brandMark large">P</div><div><b>PEGAS FLOW</b><span>LTL operations platform</span></div></div><div className="loginCopy"><span className="eyebrow">CONTROL TOWER · WMS · TMS</span><h1>Одна система для движения каждой паллеты.</h1><p>Заявка, забор, терминал, адресное хранение, консолидация, магистральный рейс, последняя миля и контроль SLA.</p></div><div className="loginStats"><div><b>7</b><span>ролей доступа</span></div><div><b>1</b><span>единая база</span></div><div><b>24/7</b><span>операционный контур</span></div></div></div><div className="loginPanel"><div className="loginBox"><span className="eyebrow">ЗАЩИЩЁННЫЙ ДОСТУП</span><h2>Войти в PEGAS FLOW</h2><p>Для входа открой <b>@pegas_flow_bot</b> в Telegram и отправь команду <code>/login</code>. Бот пришлёт одноразовый 6-значный код.</p><form onSubmit={submit}><Field label="Код из Telegram"><input className="codeInput" inputMode="numeric" maxLength={6} placeholder="000000" value={code} onChange={e=>setCode(e.target.value.replace(/\D/g,''))}/></Field>{err&&<div className="formError">{err}</div>}<Button type="submit" icon={KeyRound} disabled={busy||code.length!==6}>{busy?'Проверяю...':'Войти'}</Button></form><div className="loginHelp"><Shield size={17}/><span>Код одноразовый и действует ограниченное время. Сессия привязана к вашему Telegram-пользователю и его роли.</span></div></div></div></div>
+}
+
+function App(){
+ const [boot,setBoot]=useState(true);const [session,setSession]=useState(null);const [data,setData]=useState(null);const [view,setView]=useState('tower');const [error,setError]=useState('');const [sidebar,setSidebar]=useState(true);const [refreshing,setRefreshing]=useState(false);
+ useEffect(()=>{(async()=>{try{if(window.Telegram?.WebApp?.initData){window.Telegram.WebApp.ready();window.Telegram.WebApp.expand();if(!getToken())await telegramSession()}if(getToken()){const me=await api('me');setSession(me);await load(setData)}}catch(e){setToken('');setError(e.message)}finally{setBoot(false)}})()},[]);
+ async function load(setter=setData){const d=await api('bootstrap');setter(d);return d}
+ async function refresh(){setRefreshing(true);setError('');try{await load()}catch(e){setError(e.message)}finally{setRefreshing(false)}}
+ async function login(d){setSession(d);setBoot(true);try{await load();}catch(e){setError(e.message)}finally{setBoot(false)}}
+ async function logout(){try{await api('logout')}catch{}setToken('');setSession(null);setData(null)}
+ if(boot)return <Loading/>;if(!session||!data)return <Login onLogin={login}/>;
+ const ctx={data,setData,refresh,user:data.user||session.user,perms:data.permissions||session.permissions||[],setView};const role=ROLE_NAMES[ctx.user?.role]||ctx.user?.role;
+ return <div className={cls('appShell',!sidebar&&'sidebarCollapsed')}>
+   <aside className="sidebar"><div className="sideBrand"><div className="brandMark">P</div><div className="brandWords"><b>PEGAS FLOW</b><span>LTL operations</span></div></div><nav>{NAV.filter(([id])=>id!=='users'||ctx.user.role==='admin').map(([id,label])=>{const I=icons[id];return <button
